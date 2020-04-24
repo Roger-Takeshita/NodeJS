@@ -3,6 +3,7 @@ const path = require('path');
 const hbs = require('hbs'); //! To load the partials
 
 const app = express();
+require('dotenv').config();
 const publicDirPath = path.join(__dirname, '../public');
 const viewsPath = path.join(__dirname, './templates/views');
 const partialsPath = path.join(__dirname, './templates/partials');
