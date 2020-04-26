@@ -37,3 +37,23 @@ new Promise((resolve, reject) => {
 })
     .then((docs) => console.log(docs))
     .catch((error) => console.log(error));
+
+const add = (a, b) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve(a + b);
+        }, 2000);
+    });
+};
+
+add(1, 2)
+    .then((result1) => {
+        console.log(result1);
+        return add(result1, 5);
+    })
+    .then((result2) => {
+        console.log(result2);
+    })
+    .catch((error) => {
+        console.log(error);
+    });
