@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const Task = mongoose.model('Task', {
+const taskSchema = new Schema({
     description: {
         type: String,
         required: true,
@@ -9,16 +10,11 @@ const Task = mongoose.model('Task', {
     completed: {
         type: Boolean,
         default: false
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     }
 });
 
-//! Create a new task
-// const task = new Task({
-//     description: ' teste 2     '
-// });
-
-// task.save()
-//     .then((doc) => console.log(doc))
-//     .catch((error) => console.log(error));
-
-module.exports = Task;
+module.exports = mongoose.model('Task', taskSchema);

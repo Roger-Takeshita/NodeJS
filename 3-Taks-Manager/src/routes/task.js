@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const taskCtrl = require('../controllers/task');
+const { authJWT } = require('../middlewares/auth');
 
-router.get('', taskCtrl.getTasks);
-router.get('/:id', taskCtrl.getTask);
-router.put('/:id', taskCtrl.updateTask);
-router.delete('/:id', taskCtrl.deleteTask);
-router.post('/new', taskCtrl.newTask);
+router.get('', authJWT, taskCtrl.getTasks);
+router.get('/:id', authJWT, taskCtrl.getTask);
+router.put('/:id', authJWT, taskCtrl.updateTask);
+router.delete('/:id', authJWT, taskCtrl.deleteTask);
+router.post('/new', authJWT, taskCtrl.newTask);
 
 module.exports = router;
