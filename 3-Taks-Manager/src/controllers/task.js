@@ -2,7 +2,17 @@ const Task = require('../models/task');
 
 const getTasks = async (req, res) => {
     try {
-        res.send(await Task.find({ user: req.user._id }, '-__v'));
+        const match = req.query.completed ? { completed: req.query.completed } : {};
+        const splitSort = req.query.sortBy ? req.query.sortBy.split(':') : [];
+        const sort = req.query.sortBy ? { [splitSort[0]]: splitSort[1] } : {};
+        console.log(sort);
+        res.send(
+            await Task.find({ user: req.user._id })
+                .where(match)
+                .limit(parseInt(req.query.limit))
+                .skip(parseInt(req.query.skip))
+                .sort(sort)
+        );
     } catch (error) {
         res.status(500).send({ message: 'Something went wrong', error });
     }
@@ -10,11 +20,7 @@ const getTasks = async (req, res) => {
 
 const getTask = async (req, res) => {
     try {
-        const task = await Task.findOne({ _id: req.params.id, user: req.user._id }, '-__v').populate(
-            'user',
-            '-__v'
-        );
-        console.log(task);
+        const task = await Task.findOne({ _id: req.params.id, user: req.user._id }).populate('user');
         if (!task) return res.status(404).send();
         res.send(task);
     } catch (error) {
@@ -39,7 +45,7 @@ const updateTask = async (req, res) => {
     if (!isValideOperation) return res.status(400).send({ error: 'Invalid Fields' });
 
     try {
-        const task = await Task.findOne({ _id: req.params.id, user: req.user._id }, '-__v');
+        const task = await Task.findOne({ _id: req.params.id, user: req.user._id });
         if (!task) return res.status(404).send();
         bodyFields.find((field) => (task[field] = req.body[field]));
         await task.save();
