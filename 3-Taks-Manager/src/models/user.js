@@ -4,45 +4,53 @@ const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt');
 const BCRYPT_SALT_ROUNDS = 8;
 
-const userSchema = new Schema({
-    name: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    email: {
-        type: String,
-        required: true,
-        trim: true,
-        unique: true,
-        lowercase: true,
-        validate: async (value) => {
-            if (!(await validator.isEmail(value))) {
-                throw new Error('Email is invalid');
+const userSchema = new Schema(
+    {
+        name: {
+            type: String,
+            required: true,
+            trim: true
+        },
+        email: {
+            type: String,
+            required: true,
+            trim: true,
+            unique: true,
+            lowercase: true,
+            validate: async (value) => {
+                if (!(await validator.isEmail(value))) {
+                    throw new Error('Email is invalid');
+                }
             }
+        },
+        age: {
+            type: Number,
+            default: 0,
+            validate(value) {
+                if (value < 0) {
+                    throw new Error('Age must be a positive number');
+                }
+            }
+        },
+        password: {
+            type: String,
+            required: true,
+            minlength: 7,
+            trim: true,
+            validate(value) {
+                if (value.toLowerCase().includes('password')) {
+                    throw new Error('Password cannot contain "password"');
+                }
+            }
+        },
+        avatar: {
+            type: Buffer
         }
     },
-    age: {
-        type: Number,
-        default: 0,
-        validate(value) {
-            if (value < 0) {
-                throw new Error('Age must be a positive number');
-            }
-        }
-    },
-    password: {
-        type: String,
-        required: true,
-        minlength: 7,
-        trim: true,
-        validate(value) {
-            if (value.toLowerCase().includes('password')) {
-                throw new Error('Password cannot contain "password"');
-            }
-        }
+    {
+        timestamps: true
     }
-});
+);
 
 //! Virtual relationship
 //+ 1st argument is the name (this could be any name)
@@ -72,6 +80,10 @@ userSchema.set('toJSON', {
         delete ret.password;
         delete ret.age;
         delete ret.email;
+        delete ret.createdAt;
+        delete ret.updatedAt;
+        delete ret.avatar;
+        delete ret.__v;
         return ret;
     }
 });
