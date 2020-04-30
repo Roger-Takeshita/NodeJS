@@ -2,6 +2,7 @@ const User = require('../models/user');
 const Task = require('../models/task');
 const { createJWT } = require('../middlewares/auth');
 const sharp = require('sharp');
+const { isEmail } = require('validator');
 const { sendWelcomeEmail, sendCancelationEmail } = require('../emails/account');
 
 const getUsers = async (req, res) => {
@@ -34,6 +35,8 @@ const getUserProfile = async (req, res) => {
 
 const newUser = async (req, res) => {
     try {
+        if (!req.body.name || !isEmail(req.body.email) || !(req.body.password.length > 5))
+            return res.status(400).send({ message: 'Invalid credentials' });
         const user = new User(req.body);
         await user.save();
         sendWelcomeEmail(user.email, user.name);
@@ -50,7 +53,6 @@ const updateUser = async (req, res) => {
     const isValidOperation = bodyFields.every((field) => allowedFields.includes(field));
 
     if (!isValidOperation) return res.status(400).send({ error: 'Invalid Updates!' });
-
     try {
         //! the find by id and update method bypasses moongose
         //! It performs a direct operation on the database

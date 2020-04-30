@@ -5,7 +5,6 @@ const getTasks = async (req, res) => {
         const match = req.query.completed ? { completed: req.query.completed } : {};
         const splitSort = req.query.sortBy ? req.query.sortBy.split(':') : [];
         const sort = req.query.sortBy ? { [splitSort[0]]: splitSort[1] } : {};
-        console.log(sort);
         res.send(
             await Task.find({ user: req.user._id })
                 .where(match)
