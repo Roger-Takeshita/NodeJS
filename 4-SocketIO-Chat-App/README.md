@@ -9,12 +9,13 @@
   * [index.html](#indexhtml)
   * [index.js](#indexjs)
 * [Socket.io](#socketio)
-* [      ](#xxxxxxxxxx)
-* [      ](#xxxxxxxxxx)
-* [      ](#xxxxxxxxxx)
-* [      ](#xxxxxxxxxx)
-* [      ](#xxxxxxxxxx)
-* [      ](#xxxxxxxxxx)
+  * [Update index.js to Use socket.io](#updateindexsocket)
+  * [Test Connection](#testconnection)
+    * [Chat.js](#chatjs)
+    * [Increment Counter](#increment)
+      * [Send an Event From the Server](#sendeventserver)
+      * [Receive an Event From the Server](#receiveeventclient)
+      * [Emit Data Fom Client to the Server](#emitfromclient)
 
 <h1 id='links'>Links</h1>
 
@@ -35,9 +36,6 @@
   ├── public
   │   └── index.html
   ├── src
-  │   ├── templates
-  │   │   ├── partials
-  │   │   └── views
   │   └── index.js
   ├── package-lock.json
   └── package.json
@@ -49,7 +47,6 @@
 ```Bash
   npm init
   npm i express
-  npm i hbs
   npm i socket.io
 ```
 
@@ -61,7 +58,6 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "env-cmd -f ./env/dev.env nodemon src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
 ```
 
@@ -90,18 +86,12 @@
 ```JavaScript
   const express = require('express');
   const path = require('path');
-  const hbs = require('hbs');
   const port = process.env.PORT;
 
   const app = express();
 
   const publicDirPath = path.join(__dirname, '../public');
-  const viewsPath = path.join(__dirname, './templates/views');
-  const partialsPath = path.join(__dirname, './templates/partials');
 
-  app.set('view engine', 'hbs');
-  app.set('views', viewsPath);
-  hbs.registerPartials(partialsPath);
   app.use(express.static(publicDirPath));
 
   app.listen(port, () => {
@@ -113,7 +103,7 @@
 
 [Go Back to Summary](#summary)
 
-<h2 id='updateindexsocket'>Update index.js to use socket.io</h2>
+<h2 id='updateindexsocket'>Update index.js to Use socket.io</h2>
 
 [Go Back to Summary](#summary)
 
@@ -125,7 +115,7 @@
     * `const server = http.createServer(app);`
   * then change the `app.listen` to `server.listen`
 
-  ```
+  ```JavaScript
       server.listen(port, () => {
         console.log(`Server running on port ${port}`);
       });
@@ -134,7 +124,6 @@
   ```JavaScript
       const express = require('express');
       const path = require('path');
-      const hbs = require('hbs');
       const http = require('http');
       const port = process.env.PORT;
 
@@ -142,12 +131,7 @@
       const server = http.createServer(app);
 
       const publicDirPath = path.join(__dirname, '../public');
-      const viewsPath = path.join(__dirname, './templates/views');
-      const partialsPath = path.join(__dirname, './templates/partials');
 
-      app.set('view engine', 'hbs');
-      app.set('views', viewsPath);
-      hbs.registerPartials(partialsPath);
       app.use(express.static(publicDirPath));
 
       server.listen(port, () => {
@@ -235,7 +219,7 @@
       io();
   ```
 
-<h3 id='countusers'>Count The Users</h3>
+<h3 id='increment'>Increment Counter</h3>
 
 [Go Back to Summary](#summary)
 
@@ -321,3 +305,5 @@
         });
     });
   ```
+
+  npm i bad-words
